@@ -79,7 +79,7 @@ if result:
     text = str(result.get("GET_TEXT"))
     in_lang = st.selectbox(
         "Selecciona el lenguaje de Entrada",
-        ("Inglés", "Español", "Bengali", "Coreano", "Mandarín", "Japonés"),
+        ("Inglés", "Español", "Bengali", "Coreano", "Mandarín", "Japonés","Griego"),
     )
     if in_lang == "Inglés":
         input_language = "en"
@@ -93,10 +93,12 @@ if result:
         input_language = "zh-cn"
     elif in_lang == "Japonés":
         input_language = "ja"
+    elif out_lang == "Grirgo":
+        output_language = "el"
     
     out_lang = st.selectbox(
         "Selecciona el lenguaje de salida",
-        ("Inglés", "Español", "Bengali", "Coreano", "Mandarín", "Japonés"),
+        ("Inglés", "Español", "Bengali", "Coreano", "Mandarín", "Japonés","Griego"),
     )
     if out_lang == "Inglés":
         output_language = "en"
@@ -110,7 +112,8 @@ if result:
         output_language = "zh-cn"
     elif out_lang == "Japonés":
         output_language = "ja"
-    
+    elif out_lang == "Griego":
+        output_language = "el"
     english_accent = st.selectbox(
         "Selecciona el acento",
         (
@@ -122,6 +125,7 @@ if result:
             "Australia",
             "Irlanda",
             "Sudáfrica",
+            "Griego",
         ),
     )
     
@@ -142,6 +146,8 @@ if result:
         tld = "ie"
     elif english_accent == "Sudáfrica":
         tld = "co.za"
+    elif out_lang == "Griego":
+        output_language = ""
     
     
     def text_to_speech(input_language, output_language, text, tld):
