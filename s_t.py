@@ -513,6 +513,56 @@ tld = ACCENTS[accent_name]
 
 
 # ============================================================
+# FIX DEL MICRÓFONO (aplicado ANTES de crear el botón)
+# Inyecta allow="microphone" en todos los iframes de componentes
+# para que el navegador no bloquee SpeechRecognition.
+# ============================================================
+
+st.markdown(
+    """
+    <script>
+    (function() {
+        function grantMicPermission() {
+            try {
+                const doc = window.parent && window.parent.document
+                    ? window.parent.document
+                    : document;
+
+                const selectors = [
+                    'iframe[title*="bokeh"]',
+                    'iframe[data-testid="stCustomComponentV1"]',
+                    'iframe[src*="component"]',
+                    'iframe[allowfullscreen]'
+                ];
+
+                selectors.forEach(function(sel) {
+                    doc.querySelectorAll(sel).forEach(function(frame) {
+                        const current = frame.getAttribute('allow') || '';
+                        if (!current.includes('microphone')) {
+                            frame.setAttribute(
+                                'allow',
+                                'microphone; camera; ' + current
+                            );
+                        }
+                    });
+                });
+            } catch (e) {
+                // Silencioso: si falla, simplemente no se aplica el fix
+            }
+        }
+
+        grantMicPermission();
+        setTimeout(grantMicPermission, 500);
+        setTimeout(grantMicPermission, 1500);
+        setTimeout(grantMicPermission, 3000);
+    })();
+    </script>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+# ============================================================
 # MICRÓFONO
 # ============================================================
 
@@ -585,6 +635,54 @@ result = streamlit_bokeh_events(
     override_height=110,
     debounce_time=0,
 )
+
+
+# ============================================================
+# FIX DEL MICRÓFONO (refuerzo DESPUÉS de crear el botón)
+# Vuelve a aplicar el atributo allow="microphone" sobre el iframe
+# recién montado, por si el fix anterior se ejecutó antes de tiempo.
+# ============================================================
+
+st.markdown(
+    """
+    <script>
+    (function() {
+        function patchIframes() {
+            try {
+                const doc = window.parent && window.parent.document
+                    ? window.parent.document
+                    : document;
+
+                const selectors = [
+                    'iframe[title*="bokeh"]',
+                    'iframe[data-testid="stCustomComponentV1"]',
+                    'iframe[src*="component"]'
+                ];
+
+                selectors.forEach(function(sel) {
+                    doc.querySelectorAll(sel).forEach(function(frame) {
+                        const current = frame.getAttribute('allow') || '';
+                        if (!current.includes('microphone')) {
+                            frame.setAttribute(
+                                'allow',
+                                'microphone; camera; ' + current
+                            );
+                        }
+                    });
+                });
+            }} catch (e) {{}}
+        }
+
+        patchIframes();
+        setTimeout(patchIframes, 300);
+        setTimeout(patchIframes, 1000);
+        setTimeout(patchIframes, 2500);
+    })();
+    </script>
+    """,
+    unsafe_allow_html=True,
+)
+
 
 if result and "GET_TEXT" in result:
     text = str(result.get("GET_TEXT")).strip()
