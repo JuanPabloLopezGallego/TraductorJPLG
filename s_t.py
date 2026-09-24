@@ -32,43 +32,46 @@ os.makedirs(TEMP_FOLDER, exist_ok=True)
 st.markdown(
     """
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
     :root {
-        --primary: #2563eb;
-        --primary-dark: #1d4ed8;
-        --primary-soft: #eff6ff;
-        --text: #172033;
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #818cf8;
+        --accent: #06b6d4;
+        --accent-2: #a855f7;
+        --text: #0f172a;
         --muted: #64748b;
-        --heading: #102a56;
+        --heading: #0b1437;
         --surface: #ffffff;
         --surface-soft: #f8fafc;
-        --border: #dbe4ef;
-        --success: #15803d;
+        --border: #e2e8f0;
+        --success: #10b981;
+        --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+        --gradient-soft: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 50%, #ecfeff 100%);
+    }
+
+    html, body, [class*="css"], .stApp {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
     }
 
     /* ---------- FONDO ---------- */
 
     .stApp {
-        background: #f4f7fb;
+        background: #f7f8fc;
         color: var(--text);
     }
 
     [data-testid="stAppViewContainer"] {
         background:
-            radial-gradient(
-                circle at 8% 0%,
-                rgba(37, 99, 235, 0.08),
-                transparent 28%
-            ),
-            linear-gradient(
-                180deg,
-                #f9fbff 0%,
-                #f4f7fb 100%
-            );
+            radial-gradient(1000px 500px at 10% -10%, rgba(99, 102, 241, 0.10), transparent 60%),
+            radial-gradient(900px 500px at 100% 0%, rgba(6, 182, 212, 0.08), transparent 55%),
+            radial-gradient(700px 500px at 50% 100%, rgba(168, 85, 247, 0.07), transparent 60%),
+            linear-gradient(180deg, #fbfcff 0%, #f5f7fc 100%);
     }
 
     [data-testid="stHeader"] {
-        background: rgba(249, 251, 255, 0.92);
+        background: transparent;
     }
 
     .block-container {
@@ -77,52 +80,45 @@ st.markdown(
         padding-bottom: 4rem;
     }
 
-    #MainMenu,
-    footer {
-        visibility: hidden;
-    }
+    #MainMenu, footer { visibility: hidden; }
 
     /* ---------- TIPOGRAFÍA ---------- */
 
-    h1, h2, h3, h4 {
+    h1, h2, h3, h4, .hero-title, .feature-title, .result-text {
+        font-family: 'Space Grotesk', 'Inter', sans-serif !important;
         color: var(--heading) !important;
-        letter-spacing: -0.025em;
+        letter-spacing: -0.03em;
     }
 
-    h1 {
-        font-size: 2.7rem !important;
-        font-weight: 850 !important;
-        line-height: 1.05 !important;
-    }
-
-    h2 {
-        font-weight: 800 !important;
-    }
-
+    h1 { font-size: 2.6rem !important; font-weight: 700 !important; line-height: 1.05 !important; }
+    h2 { font-weight: 700 !important; letter-spacing: -0.025em; }
     h3 {
-        font-weight: 750 !important;
+        font-weight: 700 !important;
+        font-size: 1.35rem !important;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
-    p, label, span {
-        color: var(--text);
-    }
+    p, label, span { color: var(--text); }
 
     /* ---------- SIDEBAR ---------- */
 
     section[data-testid="stSidebar"] {
-        background: #ffffff;
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
         border-right: 1px solid var(--border);
-        box-shadow: 5px 0 20px rgba(15, 23, 42, 0.04);
+        box-shadow: 5px 0 30px rgba(15, 23, 42, 0.04);
     }
 
-    section[data-testid="stSidebar"] > div {
-        background: #ffffff;
-    }
+    section[data-testid="stSidebar"] > div { background: transparent; }
 
     section[data-testid="stSidebar"] h1,
     section[data-testid="stSidebar"] h2,
     section[data-testid="stSidebar"] h3 {
         color: var(--heading) !important;
+        font-family: 'Space Grotesk', sans-serif !important;
     }
 
     section[data-testid="stSidebar"] p,
@@ -134,235 +130,364 @@ st.markdown(
 
     div[data-baseweb="select"] > div {
         background: #ffffff !important;
-        border: 1px solid #cbd5e1 !important;
-        border-radius: 12px !important;
-        min-height: 44px;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 14px !important;
+        min-height: 46px;
         color: var(--text) !important;
+        transition: border-color 0.18s ease, box-shadow 0.18s ease;
     }
 
-    div[data-baseweb="select"] input {
-        color: var(--text) !important;
+    div[data-baseweb="select"] > div:hover {
+        border-color: var(--primary-light) !important;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08) !important;
     }
+
+    div[data-baseweb="select"] input { color: var(--text) !important; }
 
     /* ---------- BOTONES ---------- */
 
     .stButton > button {
         width: 100%;
-        min-height: 48px;
-        border-radius: 13px;
-        border: 1px solid var(--primary);
-        background: linear-gradient(
-            135deg,
-            #2563eb,
-            #3b82f6
-        );
-        color: white !important;
+        min-height: 50px;
+        border-radius: 14px;
+        border: none;
+        background: var(--gradient);
+        background-size: 200% 200%;
+        color: #ffffff !important;
+        font-family: 'Inter', sans-serif;
         font-size: 15px;
-        font-weight: 750;
+        font-weight: 700;
+        letter-spacing: -0.01em;
         box-shadow:
-            0 6px 16px rgba(37, 99, 235, 0.16);
-        transition:
-            transform 0.18s ease,
-            box-shadow 0.18s ease,
-            background 0.18s ease;
+            0 8px 22px rgba(99, 102, 241, 0.25),
+            0 2px 6px rgba(99, 102, 241, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        transition: transform 0.2s ease, box-shadow 0.25s ease, background-position 0.5s ease;
+        position: relative;
+        overflow: hidden;
     }
 
     .stButton > button p,
-    .stButton > button span {
-        color: white !important;
-    }
+    .stButton > button span { color: #ffffff !important; }
 
     .stButton > button:hover {
-        background: linear-gradient(
-            135deg,
-            #1d4ed8,
-            #2563eb
-        );
-        transform: translateY(-1px);
+        background-position: 100% 0%;
+        transform: translateY(-2px);
         box-shadow:
-            0 9px 22px rgba(37, 99, 235, 0.23);
+            0 14px 30px rgba(99, 102, 241, 0.35),
+            0 4px 10px rgba(99, 102, 241, 0.20),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
+
+    .stButton > button:active { transform: translateY(0); }
 
     /* ---------- INPUTS ---------- */
 
-    textarea,
-    input {
+    textarea, input {
         background: #ffffff !important;
         color: var(--text) !important;
-        border: 1px solid #cbd5e1 !important;
-        border-radius: 12px !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 14px !important;
+        transition: all 0.18s ease;
     }
 
-    textarea:focus,
-    input:focus {
+    textarea:focus, input:focus {
         border-color: var(--primary) !important;
-        box-shadow:
-            0 0 0 3px rgba(37, 99, 235, 0.10) !important;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12) !important;
     }
 
-    /* ---------- TARJETAS ---------- */
+    /* ---------- HERO ---------- */
 
     .hero-card {
-        background: linear-gradient(
-            135deg,
-            #ffffff 0%,
-            #f5f9ff 100%
-        );
+        position: relative;
+        overflow: hidden;
+        background:
+            radial-gradient(600px 300px at 90% 10%, rgba(168, 85, 247, 0.14), transparent 60%),
+            radial-gradient(500px 300px at 10% 90%, rgba(6, 182, 212, 0.12), transparent 60%),
+            linear-gradient(135deg, #ffffff 0%, #fbfaff 100%);
         border: 1px solid var(--border);
-        border-radius: 24px;
-        padding: 2.2rem 2.4rem;
-        margin-bottom: 1.5rem;
+        border-radius: 28px;
+        padding: 2.6rem 2.6rem 2.4rem;
+        margin-bottom: 1.6rem;
         box-shadow:
-            0 10px 35px rgba(15, 23, 42, 0.06);
+            0 20px 50px rgba(15, 23, 42, 0.08),
+            0 4px 12px rgba(15, 23, 42, 0.04);
+        animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-card::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: 30px;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(99,102,241,0.5), rgba(6,182,212,0.3), rgba(168,85,247,0.5));
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
     }
 
     .hero-badge {
-        display: inline-block;
-        padding: 0.4rem 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.45rem 0.9rem;
         border-radius: 999px;
-        background: var(--primary-soft);
+        background: linear-gradient(135deg, #eef2ff, #f5f3ff);
         color: var(--primary-dark) !important;
-        border: 1px solid #bfdbfe;
-        font-size: 0.82rem;
-        font-weight: 750;
-        margin-bottom: 0.9rem;
+        border: 1px solid #c7d2fe;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.12);
+    }
+
+    .hero-badge::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #06b6d4);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        animation: pulse 1.8s ease-in-out infinite;
     }
 
     .hero-title {
-        color: var(--heading);
-        font-size: 2.7rem;
-        font-weight: 850;
-        line-height: 1.05;
-        margin-bottom: 0.7rem;
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1.02;
+        margin-bottom: 0.85rem;
+        background: linear-gradient(135deg, #0b1437 0%, #4f46e5 60%, #06b6d4 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
     .hero-description {
         color: #64748b !important;
-        font-size: 1.05rem;
-        line-height: 1.65;
+        font-size: 1.06rem;
+        line-height: 1.7;
         max-width: 720px;
         margin-bottom: 0;
     }
 
+    /* ---------- FEATURE CARDS ---------- */
+
     .feature-card {
+        position: relative;
         background: #ffffff;
         border: 1px solid var(--border);
-        border-radius: 18px;
-        padding: 1.3rem;
-        min-height: 145px;
+        border-radius: 20px;
+        padding: 1.5rem 1.4rem;
+        min-height: 165px;
         box-shadow:
-            0 5px 18px rgba(15, 23, 42, 0.04);
+            0 6px 20px rgba(15, 23, 42, 0.05),
+            0 1px 2px rgba(15, 23, 42, 0.04);
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        animation: fadeUp 0.6s ease both;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-4px);
+        border-color: #c7d2fe;
+        box-shadow:
+            0 18px 40px rgba(99, 102, 241, 0.14),
+            0 4px 10px rgba(15, 23, 42, 0.05);
     }
 
     .feature-icon {
-        font-size: 1.65rem;
-        margin-bottom: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+        font-size: 1.4rem;
+        margin-bottom: 0.9rem;
+        box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.15);
     }
 
     .feature-title {
-        color: var(--heading);
-        font-size: 1rem;
-        font-weight: 800;
-        margin-bottom: 0.35rem;
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
     }
 
     .feature-text {
         color: #64748b !important;
-        font-size: 0.9rem;
-        line-height: 1.5;
+        font-size: 0.92rem;
+        line-height: 1.55;
     }
 
+    /* ---------- RESULT CARDS ---------- */
+
     .result-card {
+        position: relative;
         background: #ffffff;
         border: 1px solid var(--border);
-        border-radius: 18px;
-        padding: 1.35rem;
+        border-radius: 20px;
+        padding: 1.5rem 1.6rem;
         box-shadow:
-            0 5px 18px rgba(15, 23, 42, 0.045);
-        margin-top: 0.7rem;
+            0 8px 24px rgba(15, 23, 42, 0.06),
+            0 2px 4px rgba(15, 23, 42, 0.03);
+        margin-top: 0.75rem;
+        animation: fadeUp 0.5s ease both;
+    }
+
+    .result-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 20%;
+        bottom: 20%;
+        width: 4px;
+        border-radius: 4px;
+        background: var(--gradient);
     }
 
     .result-label {
         color: #64748b !important;
-        font-size: 0.8rem;
-        font-weight: 750;
+        font-size: 0.72rem;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.06em;
-        margin-bottom: 0.45rem;
+        letter-spacing: 0.12em;
+        margin-bottom: 0.55rem;
     }
 
     .result-text {
         color: var(--heading);
-        font-size: 1.25rem;
-        font-weight: 650;
+        font-size: 1.3rem;
+        font-weight: 600;
         line-height: 1.5;
     }
 
+    /* ---------- STATUS ---------- */
+
     .status-card {
-        background: #ecfdf3;
-        border: 1px solid #bbf7d0;
-        border-radius: 14px;
-        padding: 0.85rem 1rem;
-        color: #166534 !important;
-        font-weight: 650;
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 100%);
+        border: 1px solid #a7f3d0;
+        border-radius: 16px;
+        padding: 1rem 1.15rem;
+        color: #065f46 !important;
+        font-weight: 600;
+        margin-top: 1rem;
+        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.10);
+        animation: fadeUp 0.5s ease both;
     }
+
+    .status-card::before {
+        content: '';
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.18);
+        animation: pulse 1.8s ease-in-out infinite;
+        flex-shrink: 0;
+    }
+
+    /* ---------- MIC WAVE (decorativo) ---------- */
+
+    .mic-wave {
+        display: inline-flex;
+        align-items: flex-end;
+        gap: 3px;
+        height: 22px;
+        margin-top: 1.2rem;
+        vertical-align: middle;
+    }
+
+    .mic-wave span {
+        display: block;
+        width: 4px;
+        background: linear-gradient(180deg, #6366f1, #06b6d4);
+        border-radius: 2px;
+        animation: wave 1.1s ease-in-out infinite;
+    }
+
+    .mic-wave span:nth-child(1) { height: 40%; animation-delay: 0s; }
+    .mic-wave span:nth-child(2) { height: 80%; animation-delay: 0.15s; }
+    .mic-wave span:nth-child(3) { height: 55%; animation-delay: 0.3s; }
+    .mic-wave span:nth-child(4) { height: 95%; animation-delay: 0.45s; }
+    .mic-wave span:nth-child(5) { height: 45%; animation-delay: 0.6s; }
+
+    /* ---------- FOOTER ---------- */
 
     .footer-card {
         text-align: center;
         color: #64748b !important;
-        font-size: 0.82rem;
+        font-size: 0.85rem;
         padding-top: 2rem;
+        line-height: 1.7;
     }
 
     .footer-card strong {
         color: #334155 !important;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: -0.01em;
     }
 
     /* ---------- SEPARADORES ---------- */
 
     hr {
         border: 0;
-        border-top: 1px solid #dfe7f1;
-        margin: 2rem 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #dfe7f1 20%, #dfe7f1 80%, transparent);
+        margin: 2.2rem 0;
     }
 
     /* ---------- AUDIO ---------- */
 
     audio {
         width: 100%;
-        border-radius: 10px;
+        border-radius: 14px;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
     }
 
     /* ---------- CHECKBOX ---------- */
 
     [data-testid="stCheckbox"] label,
-    [data-testid="stCheckbox"] p {
-        color: #475569 !important;
-    }
+    [data-testid="stCheckbox"] p { color: #475569 !important; }
 
     /* ---------- ALERTAS ---------- */
 
     div[data-testid="stAlert"] {
-        border-radius: 14px;
+        border-radius: 16px;
         border: 1px solid var(--border);
+        box-shadow: 0 3px 10px rgba(15, 23, 42, 0.03);
+    }
+
+    /* ---------- ANIMACIONES ---------- */
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1);    opacity: 1; }
+        50%      { transform: scale(1.15); opacity: 0.85; }
+    }
+
+    @keyframes wave {
+        0%, 100% { transform: scaleY(0.5); }
+        50%      { transform: scaleY(1);   }
     }
 
     /* ---------- RESPONSIVE ---------- */
 
     @media (max-width: 700px) {
-        .hero-card {
-            padding: 1.5rem;
-            border-radius: 18px;
-        }
-
-        .hero-title,
-        h1 {
-            font-size: 2rem !important;
-        }
-
-        .hero-description {
-            font-size: 0.95rem;
-        }
+        .hero-card { padding: 1.6rem; border-radius: 20px; }
+        .hero-title, h1 { font-size: 2.1rem !important; }
+        .hero-description { font-size: 0.96rem; }
+        .result-text { font-size: 1.15rem; }
     }
 
     </style>
@@ -475,20 +600,31 @@ with st.sidebar:
     st.markdown(
         """
         <div style="
-            font-size: 1.45rem;
-            font-weight: 850;
-            color: #102a56;
-            margin-bottom: 0.2rem;
+            display:flex; align-items:center; gap:0.7rem;
+            margin-bottom: 0.35rem;
         ">
-            🎙️ VoxTranslate
+            <div style="
+                width: 38px; height: 38px; border-radius: 12px;
+                background: linear-gradient(135deg, #6366f1, #06b6d4);
+                display: flex; align-items: center; justify-content: center;
+                font-size: 1.15rem;
+                box-shadow: 0 6px 16px rgba(99,102,241,0.35);
+            ">🎙️</div>
+            <div style="
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 1.4rem;
+                font-weight: 700;
+                color: #0b1437;
+                letter-spacing: -0.02em;
+            ">VoxTranslate</div>
         </div>
         <div style="
             color: #64748b;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 1.3rem;
+            font-size: 0.88rem;
+            line-height: 1.55;
+            margin-bottom: 1.4rem;
         ">
-            Traducción por voz rápida y sencilla.
+            Traducción por voz rápida y elegante.
         </div>
         """,
         unsafe_allow_html=True,
@@ -549,21 +685,20 @@ tld = ACCENTS[accent_name]
 st.markdown(
     """
     <div class="hero-card">
-
         <div class="hero-badge">
-            🎙️ TRADUCCIÓN POR VOZ
+            TRADUCCIÓN POR VOZ
         </div>
-
         <div class="hero-title">
             Habla. Traduce. Escucha.
         </div>
-
         <p class="hero-description">
-            Convierte tu voz en texto, tradúcelo al idioma que
-            necesitas y escucha el resultado en segundos.
-            Una experiencia sencilla pensada para hablar sin complicaciones.
+            Convierte tu voz en texto, tradúcela al idioma que necesitas
+            y escúchala al instante. Una experiencia sencilla pensada
+            para hablar sin complicaciones.
         </p>
-
+        <div class="mic-wave" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
     </div>
     """,
     unsafe_allow_html=True,
@@ -628,7 +763,21 @@ st.divider()
 # RECONOCIMIENTO DE VOZ
 # ============================================================
 
-st.markdown("### 🎙️ Habla para comenzar")
+st.markdown(
+    """
+    <h3 style="display:flex; align-items:center; gap:0.6rem;">
+        <span style="
+            display:inline-flex; align-items:center; justify-content:center;
+            width:36px; height:36px; border-radius:12px;
+            background: linear-gradient(135deg,#eef2ff,#e0e7ff);
+            font-size:1.05rem;
+            box-shadow: inset 0 0 0 1px rgba(99,102,241,0.15);
+        ">🎙️</span>
+        Habla para comenzar
+    </h3>
+    """,
+    unsafe_allow_html=True,
+)
 
 st.write(
     "Pulsa el botón, espera la señal del navegador y pronuncia "
@@ -837,7 +986,7 @@ if result and "GET_TEXT" in result:
                 st.markdown(
                     """
                     <div class="status-card">
-                        ✓ Tu traducción está lista para escuchar.
+                        Tu traducción está lista para escuchar.
                     </div>
                     """,
                     unsafe_allow_html=True,
@@ -864,14 +1013,27 @@ elif not result:
         """
         <div style="
             margin-top: 1.5rem;
-            padding: 1rem 1.2rem;
-            border-radius: 14px;
-            background: #ffffff;
-            border: 1px solid #dbe4ef;
+            padding: 1.15rem 1.3rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #ffffff 0%, #fbfaff 100%);
+            border: 1px solid #e2e8f0;
             color: #64748b;
+            display: flex; align-items: center; gap: 0.8rem;
+            box-shadow: 0 6px 20px rgba(15,23,42,0.05);
+            animation: fadeUp 0.5s ease both;
         ">
-            👋 <strong style="color:#102a56;">Listo para comenzar.</strong>
-            Presiona el botón de arriba y habla para iniciar.
+            <span style="
+                display:inline-flex; align-items:center; justify-content:center;
+                width:38px; height:38px; border-radius:12px;
+                background: linear-gradient(135deg,#eef2ff,#e0e7ff);
+                font-size:1.15rem;
+            ">👋</span>
+            <div>
+                <strong style="color:#0b1437; font-family:'Space Grotesk',sans-serif;">
+                    Listo para comenzar.
+                </strong><br>
+                Presiona el botón de arriba y habla para iniciar.
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -887,8 +1049,24 @@ st.divider()
 st.markdown(
     """
     <div class="footer-card">
-        🎙️ <strong>VoxTranslate</strong><br>
-        Una experiencia de traducción por voz.
+        <div style="
+            display:inline-flex; align-items:center; gap:0.55rem;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 14px rgba(15,23,42,0.05);
+            margin-bottom: 0.85rem;
+        ">
+            <span style="
+                width: 22px; height: 22px; border-radius: 8px;
+                background: linear-gradient(135deg,#6366f1,#06b6d4);
+                display: inline-flex; align-items: center; justify-content: center;
+                font-size: 0.7rem;
+            ">🎙️</span>
+            <strong>VoxTranslate</strong>
+        </div>
+        <div>Una experiencia de traducción por voz.</div>
     </div>
     """,
     unsafe_allow_html=True,
