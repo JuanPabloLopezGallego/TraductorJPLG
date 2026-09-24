@@ -582,7 +582,7 @@ result = streamlit_bokeh_events(
     events="GET_TEXT",
     key="listen",
     refresh_on_update=False,
-    override_height=90,
+    override_height=110,
     debounce_time=0,
 )
 
@@ -625,11 +625,23 @@ user_text = st.text_area(
 # TRADUCCIÓN
 # ============================================================
 
-if user_text.strip():
+st.markdown("")
 
-    st.markdown("")
+translate_clicked = st.button(
+    "✨  Traducir y generar audio",
+    use_container_width=True,
+    key="translate_btn",
+)
 
-    if st.button("✨  Traducir y generar audio", use_container_width=True):
+if translate_clicked:
+
+    if not user_text or not user_text.strip():
+        st.warning(
+            "Primero habla por el micrófono o escribe algo en el cuadro "
+            "de arriba para poder traducirlo."
+        )
+
+    else:
         try:
             with st.spinner("Traduciendo y preparando el audio..."):
                 audio_path, output_text = text_to_speech(
