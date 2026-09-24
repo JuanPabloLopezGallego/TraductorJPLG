@@ -17,3 +17,7 @@ bokeh==2.4.3
 #bokeh==3.4.0
 Streamlit-bokeh-events
 
+streamlit>=1.39.0
+gTTS>=2.5.3
+deep-translator>=1.11.4
+SpeechRecognition>=3.10.4
