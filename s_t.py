@@ -694,11 +694,6 @@ if result and "GET_TEXT" in result:
             st.session_state.input_text = text
             st.session_state.mic_error = ""
 
-if st.session_state.mic_error:
-    st.warning(
-        "No se pudo acceder al micrófono. Revisa los permisos del navegador "
-        "o escribe el texto directamente abajo."
-    )
 
 
 # ============================================================
